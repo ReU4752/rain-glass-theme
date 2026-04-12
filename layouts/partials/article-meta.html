@@ -1,0 +1,15 @@
+{{- $items := slice -}}
+{{- with .Date -}}
+  {{- $items = $items | append (.Format "Jan 2, 2006") -}}
+{{- end -}}
+{{- with .Params.author -}}
+  {{- $items = $items | append . -}}
+{{- else -}}
+  {{- with site.Params.profile.name -}}
+    {{- $items = $items | append . -}}
+  {{- end -}}
+{{- end -}}
+{{- if gt .ReadingTime 0 -}}
+  {{- $items = $items | append (printf "%d min read" .ReadingTime) -}}
+{{- end -}}
+{{- delimit $items " · " -}}

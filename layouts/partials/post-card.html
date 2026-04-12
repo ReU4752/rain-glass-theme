@@ -1,0 +1,20 @@
+<article class="post-card glass-subpanel">
+  <a class="post-card-link" href="{{ .RelPermalink }}">
+    <div
+      class="post-card-media"
+      {{ with .Params.cover }}style="background-image:linear-gradient(145deg, rgba(29, 54, 82, 0.14), rgba(4, 16, 34, 0.42)), url('{{ . | relURL }}')"{{ end }}
+    ></div>
+    <div class="post-card-copy">
+      <h3>{{ .Title }}</h3>
+      <p class="post-card-meta">{{ partial "article-meta.html" . }}</p>
+      {{ with .Description }}
+        <p class="post-card-description">{{ . }}</p>
+      {{ end }}
+      <div class="post-card-tags">
+        {{ range first 4 (.Params.tags | default slice) }}
+          <span class="tag-pill">{{ . }}</span>
+        {{ end }}
+      </div>
+    </div>
+  </a>
+</article>

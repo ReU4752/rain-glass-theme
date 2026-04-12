@@ -1,0 +1,11 @@
+<nav class="topbar glass-panel" aria-label="Primary">
+  <a class="brand" href="{{ site.Home.RelPermalink }}">
+    <span class="brand-mark">◈</span>
+    <span>{{ site.Title }}</span>
+  </a>
+  <div class="topbar-links">
+    {{ range site.Menus.main }}
+      <a href="{{ .URL }}" class="{{ if $.IsMenuCurrent `main` . }}is-active{{ end }}">{{ .Name }}</a>
+    {{ end }}
+  </div>
+</nav>

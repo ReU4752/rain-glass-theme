@@ -1,0 +1,12 @@
+name = "Rain Glass"
+license = "MIT"
+licenselink = "https://opensource.org/licenses/MIT"
+description = "A rainy glass Hugo theme with a raindrop background."
+homepage = "https://example.org/"
+tags = ["blog", "glassmorphism", "rain", "responsive"]
+features = ["blog", "responsive", "toc"]
+min_version = "0.160.0"
+
+[author]
+  name = "ReU4752"
+  homepage = "https://github.com/ReU4752"

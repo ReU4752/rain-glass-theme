@@ -1,0 +1,17 @@
+{{ define "main" }}
+  <section class="listing-panel glass-panel">
+    <header class="section-header section-header-spaced">
+      <div>
+        <p class="eyebrow">{{ .Section | default .Type | default "Pages" }}</p>
+        <h1>{{ .Title }}</h1>
+      </div>
+    </header>
+    <div class="post-list">
+      {{ range .Pages.ByDate.Reverse }}
+        {{ partial "post-card.html" . }}
+      {{ else }}
+        <div class="empty-state glass-subpanel">{{ i18n "no_posts" }}</div>
+      {{ end }}
+    </div>
+  </section>
+{{ end }}

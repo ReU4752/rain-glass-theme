@@ -1,0 +1,4 @@
+Project: SardineFish/raindrop-fx
+Repository: https://github.com/SardineFish/raindrop-fx
+Bundle path: bundle/index.js
+Raw URL template: https://raw.githubusercontent.com/SardineFish/raindrop-fx/<ref>/bundle/index.js

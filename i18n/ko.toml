@@ -1,0 +1,17 @@
+[recent_posts]
+other = "최근 글"
+
+[categories]
+other = "카테고리"
+
+[tags]
+other = "태그"
+
+[contents]
+other = "목차"
+
+[no_posts]
+other = "아직 글이 없습니다."
+
+[no_terms]
+other = "아직 항목이 없습니다."

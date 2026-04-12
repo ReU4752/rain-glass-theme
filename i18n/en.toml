@@ -1,0 +1,17 @@
+[recent_posts]
+other = "Recent Posts"
+
+[categories]
+other = "Categories"
+
+[tags]
+other = "Tags"
+
+[contents]
+other = "Contents"
+
+[no_posts]
+other = "No posts yet."
+
+[no_terms]
+other = "Nothing here yet."
