@@ -13,7 +13,7 @@
   --topbar-height: 88px;
   --rain-fade-duration: 1600ms;
   --layout-shift-duration: 450ms;
-  --layout-shift-easing: ease-in-out;
+  --layout-shift-easing: cubic-bezier(0.65, 0, 0.22, 1);
 }
 
 * {
