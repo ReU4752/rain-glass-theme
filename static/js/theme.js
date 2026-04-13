@@ -1,4 +1,26 @@
 (function () {
+  function bindMediaQueryChange(query, handler) {
+    if (!query) {
+      return function () {};
+    }
+
+    if (typeof query.addEventListener === "function") {
+      query.addEventListener("change", handler);
+      return function () {
+        query.removeEventListener("change", handler);
+      };
+    }
+
+    if (typeof query.addListener === "function") {
+      query.addListener(handler);
+      return function () {
+        query.removeListener(handler);
+      };
+    }
+
+    return function () {};
+  }
+
   function applyBackground(target) {
     if (!target) {
       return;
@@ -87,11 +109,102 @@
     }
   }
 
+  function bootHomeSidebarCollapse() {
+    var homeLayout = document.querySelector(".home-layout");
+    var homeSidebarTrack = homeLayout ? homeLayout.querySelector(".home-sidebar-track") : null;
+    var homeSidebar = homeSidebarTrack ? homeSidebarTrack.querySelector(".home-sidebar") : null;
+    var desktopQuery;
+    var unbindDesktopChange;
+    var collapseThreshold = 0;
+    var syncFrame = 0;
+
+    if (!homeLayout || !homeSidebarTrack || !homeSidebar) {
+      return;
+    }
+
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+      return;
+    }
+
+    desktopQuery = window.matchMedia("(min-width: 981px)");
+
+    function setCollapsed(nextCollapsed) {
+      homeLayout.classList.toggle("is-sidebar-collapsed", nextCollapsed);
+    }
+
+    function getScrollTop() {
+      return window.scrollY || window.pageYOffset || 0;
+    }
+
+    function measureCollapseThreshold() {
+      var wasCollapsed = homeLayout.classList.contains("is-sidebar-collapsed");
+      var trackRect;
+
+      if (wasCollapsed) {
+        homeLayout.classList.remove("is-sidebar-collapsed");
+      }
+
+      trackRect = homeSidebarTrack.getBoundingClientRect();
+      collapseThreshold = getScrollTop() + trackRect.top + trackRect.height;
+
+      if (wasCollapsed) {
+        homeLayout.classList.add("is-sidebar-collapsed");
+      }
+    }
+
+    function syncCollapsedState() {
+      if (!desktopQuery.matches) {
+        setCollapsed(false);
+        return;
+      }
+
+      if (!collapseThreshold) {
+        measureCollapseThreshold();
+      }
+
+      setCollapsed(getScrollTop() >= collapseThreshold);
+    }
+
+    function requestSync() {
+      if (syncFrame) {
+        return;
+      }
+
+      syncFrame = window.requestAnimationFrame(function () {
+        syncFrame = 0;
+        syncCollapsedState();
+      });
+    }
+
+    function handleViewportChange() {
+      measureCollapseThreshold();
+      syncCollapsedState();
+    }
+
+    unbindDesktopChange = bindMediaQueryChange(desktopQuery, handleViewportChange);
+    window.addEventListener("scroll", requestSync, { passive: true });
+    window.addEventListener("resize", handleViewportChange);
+    window.addEventListener("load", handleViewportChange, { once: true });
+    handleViewportChange();
+
+    window.addEventListener("pagehide", function () {
+      if (syncFrame) {
+        window.cancelAnimationFrame(syncFrame);
+      }
+
+      window.removeEventListener("scroll", requestSync);
+      window.removeEventListener("resize", handleViewportChange);
+      unbindDesktopChange();
+    }, { once: true });
+  }
+
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () {
       window.requestAnimationFrame(bootRain);
+      window.requestAnimationFrame(bootHomeSidebarCollapse);
     });
   } else {
     window.requestAnimationFrame(bootRain);
+    window.requestAnimationFrame(bootHomeSidebarCollapse);
   }
 })();

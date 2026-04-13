@@ -12,6 +12,8 @@
   --max-width: 1240px;
   --topbar-height: 88px;
   --rain-fade-duration: 1600ms;
+  --layout-shift-duration: 450ms;
+  --layout-shift-easing: ease-in-out;
 }
 
 * {
@@ -169,6 +171,9 @@ body.rain-ready .rain-canvas {
   grid-template-columns: minmax(250px, 290px) minmax(0, 1fr);
   gap: 24px;
   align-items: start;
+  transition:
+    grid-template-columns var(--layout-shift-duration) var(--layout-shift-easing),
+    gap var(--layout-shift-duration) var(--layout-shift-easing);
 }
 
 .home-sidebar,
@@ -178,9 +183,53 @@ body.rain-ready .rain-canvas {
   padding: 24px;
 }
 
+.home-sidebar-track {
+  min-width: 0;
+}
+
 .home-sidebar {
+  min-width: 0;
   position: sticky;
   top: calc(var(--topbar-height) + 32px);
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+  transform-origin: left top;
+  transition:
+    opacity var(--layout-shift-duration) var(--layout-shift-easing),
+    transform var(--layout-shift-duration) var(--layout-shift-easing),
+    visibility 0s linear 0s,
+    padding var(--layout-shift-duration) var(--layout-shift-easing);
+}
+
+.home-content {
+  min-width: 0;
+  transition: width var(--layout-shift-duration) var(--layout-shift-easing);
+}
+
+.home-layout.is-sidebar-collapsed {
+  grid-template-columns: 0 minmax(0, 1fr);
+  gap: 0;
+}
+
+.home-layout.is-sidebar-collapsed .home-sidebar-track {
+  overflow: hidden;
+}
+
+.home-layout.is-sidebar-collapsed .home-sidebar {
+  padding: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-24px);
+  overflow: hidden;
+  border-color: transparent;
+  box-shadow: none;
+  transition:
+    opacity var(--layout-shift-duration) var(--layout-shift-easing),
+    transform var(--layout-shift-duration) var(--layout-shift-easing),
+    visibility 0s linear var(--layout-shift-duration),
+    padding var(--layout-shift-duration) var(--layout-shift-easing);
 }
 
 .profile-head {
@@ -426,9 +475,24 @@ body.rain-ready .rain-canvas {
     grid-template-columns: 1fr;
   }
 
+  .home-layout {
+    gap: 24px;
+  }
+
+  .home-layout.is-sidebar-collapsed {
+    gap: 24px;
+  }
+
   .home-sidebar,
   .toc-panel {
     position: static;
+  }
+
+  .home-layout.is-sidebar-collapsed .home-sidebar {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
   }
 }
 
@@ -469,5 +533,18 @@ body.rain-ready .rain-canvas {
   .listing-panel,
   .article-panel {
     padding: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .rain-canvas,
+  .home-layout,
+  .home-sidebar,
+  .home-content {
+    transition: none;
   }
 }
