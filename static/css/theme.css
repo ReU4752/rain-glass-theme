@@ -11,6 +11,7 @@
   --radius-md: 18px;
   --max-width: 1240px;
   --topbar-height: 88px;
+  --toc-sticky-offset: 12px;
   --rain-fade-duration: 1600ms;
   --layout-shift-duration: 450ms;
   --layout-shift-easing: cubic-bezier(0.65, 0, 0.22, 1);
@@ -48,7 +49,8 @@ img {
 .site-shell {
   position: relative;
   min-height: 100vh;
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 .rain-backdrop,
@@ -119,8 +121,6 @@ body.rain-ready .rain-canvas {
 }
 
 .topbar-wrap {
-  position: sticky;
-  top: 20px;
   padding: 20px 16px 0;
 }
 
@@ -484,13 +484,29 @@ body.rain-ready .rain-canvas {
 
 .toc-panel {
   position: sticky;
-  top: calc(var(--topbar-height) + 32px);
+  top: var(--toc-sticky-offset);
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - var(--toc-sticky-offset) - 24px);
   padding: 20px;
 }
 
 .toc-title {
+  flex: 0 0 auto;
   margin-bottom: 14px;
   font-weight: 700;
+}
+
+.toc-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.toc-body nav {
+  min-width: 0;
 }
 
 .toc-body ul {
@@ -498,11 +514,143 @@ body.rain-ready .rain-canvas {
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 10px;
+  gap: 9px;
+}
+
+.toc-body li {
+  min-width: 0;
+}
+
+.toc-body li ul {
+  position: relative;
+  margin-top: 7px;
+  margin-left: 0.6rem;
+  padding-left: 0.95rem;
+  gap: 8px;
+}
+
+.toc-body li ul::before {
+  content: "";
+  position: absolute;
+  top: 0.15rem;
+  bottom: 0.2rem;
+  left: 0;
+  width: 1px;
+  background: rgba(82, 123, 168, 0.28);
+}
+
+.toc-item-row {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr);
+  align-items: start;
+  gap: 0.18rem;
+  min-width: 0;
 }
 
 .toc-body a {
+  grid-column: 2;
+  display: block;
+  min-width: 0;
+  padding: 4px 8px;
+  border-radius: 8px;
   color: var(--text-soft);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.toc-body > nav > ul > li > a,
+.toc-body > nav > ul > li > .toc-item-row > a {
+  color: var(--text-main);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.toc-body > nav > ul > li > ul > li > a,
+.toc-body > nav > ul > li > ul > li > .toc-item-row > a {
+  color: rgba(36, 68, 102, 0.82);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.toc-body > nav > ul > li > ul > li > ul > li > a,
+.toc-body > nav > ul > li > ul > li > ul > li > .toc-item-row > a {
+  color: rgba(36, 68, 102, 0.68);
+  font-size: 0.84rem;
+  font-weight: 500;
+}
+
+.toc-body a:hover,
+.toc-body a:focus-visible {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.32);
+  outline: none;
+}
+
+.toc-body a:focus-visible,
+.toc-toggle:focus-visible {
+  box-shadow: 0 0 0 2px rgba(82, 123, 168, 0.35);
+}
+
+.toc-body a.is-active {
+  color: #183a5e;
+  background: rgba(255, 255, 255, 0.44);
+  box-shadow: inset 2px 0 0 rgba(82, 123, 168, 0.78);
+  font-weight: 700;
+}
+
+.toc-body li.is-current-ancestor > .toc-item-row > a,
+.toc-body li.is-current-ancestor > a {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.toc-toggle {
+  display: inline-flex;
+  grid-column: 1;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.9rem;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(36, 68, 102, 0.58);
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.toc-toggle::before {
+  content: "";
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 5px solid currentColor;
+  transform: rotate(90deg);
+  transition: transform 160ms ease;
+}
+
+.toc-toggle:hover,
+.toc-toggle:focus-visible {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.3);
+  outline: none;
+}
+
+.toc-body li.is-collapsed > ul {
+  display: none;
+}
+
+.toc-body li.is-collapsed > .toc-item-row > .toc-toggle::before {
+  transform: rotate(0deg);
 }
 
 .listing-panel {
@@ -531,6 +679,13 @@ body.rain-ready .rain-canvas {
   .home-sidebar,
   .toc-panel {
     position: static;
+    top: auto;
+    max-height: none;
+  }
+
+  .toc-body {
+    overflow-y: visible;
+    scrollbar-gutter: auto;
   }
 
   .home-layout.is-sidebar-collapsed .home-sidebar {

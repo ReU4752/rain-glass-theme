@@ -5,7 +5,7 @@
 `rain-glass` is a Hugo blog theme.
 
 - Home: profile sidebar and post list
-- Post: article card and right TOC
+- Post: article card and sticky right TOC
 - Background: `raindrop-fx`
 
 ## Folder Layout
@@ -68,6 +68,7 @@ themes/rain-glass/
 
 - Single post layout
 - Renders article content and `.TableOfContents`
+- Places the TOC in `.toc-panel` beside the article on wide viewports
 
 ### `layouts/partials/home-sidebar.html`
 
@@ -79,12 +80,31 @@ themes/rain-glass/
 
 - Main theme styles
 - Defines glass cards, layout, top bar, background, responsive rules
+- Keeps `.topbar-wrap` in normal document flow; the top bar is not sticky
+- Keeps `.site-shell` from clipping vertical overflow so sticky elements can work
+- Defines `--toc-sticky-offset` for the post TOC sticky position
+- Makes `.toc-panel` sticky on desktop and tablet layouts
+- Gives `.toc-body` its own vertical scroll area for long TOCs
+- Resets the TOC to static flow at `max-width: 980px`
 
 ### `static/js/theme.js`
 
 - Initializes `raindrop-fx`
 - Controls static background and FX transition
 - Handles resize
+- Adds nested TOC collapse buttons when a TOC item has children
+- Highlights the active TOC link and ancestor items while scrolling
+- Collapses the home sidebar after its scroll range on desktop layouts
+
+## Single Post TOC Behavior
+
+- `layouts/_default/single.html` renders Hugo's `.TableOfContents` inside `.toc-panel`.
+- On viewports wider than `980px`, `.toc-panel` is sticky and follows scroll.
+- The top bar scrolls away with the page; only the TOC should remain visible while reading.
+- The sticky start position is controlled by `--toc-sticky-offset`.
+- Long TOCs are constrained by viewport height, and `.toc-body` scrolls internally.
+- On `max-width: 980px`, `.toc-panel` becomes `position: static`, removes max-height, and `.toc-body` returns to normal overflow.
+- Avoid adding `overflow-y: hidden`, `overflow: hidden`, `transform`, or similar containing behavior to TOC ancestors unless sticky behavior is rechecked.
 
 ### `static/vendor/raindrop-fx.js`
 
