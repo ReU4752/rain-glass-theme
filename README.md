@@ -14,6 +14,8 @@ Hugo blog theme.
 - `.toc-body` owns vertical scrolling when the TOC is taller than the viewport.
 - At `max-width: 980px`, the TOC returns to static document flow.
 - Keep `.site-shell` free of vertical overflow clipping so sticky positioning can work.
+- Markdown tables are wrapped by `layouts/_markup/render-table.html` and scroll horizontally when wider than the article.
+- Article Markdown tables use theme-provided borders and header styling.
 - `theme.js` adds TOC collapse buttons and active-section highlighting.
 
 ## Apply

@@ -13,6 +13,8 @@
 ```text
 themes/rain-glass/
   layouts/
+    _markup/
+      render-table.html
     _default/
       baseof.html
       list.html
@@ -70,6 +72,12 @@ themes/rain-glass/
 - Renders article content and `.TableOfContents`
 - Places the TOC in `.toc-panel` beside the article on wide viewports
 
+### `layouts/_markup/render-table.html`
+
+- Markdown table render hook
+- Wraps generated tables in `.article-table-scroll` for horizontal scrolling
+- Preserves table attributes and column alignment emitted by Hugo
+
 ### `layouts/partials/home-sidebar.html`
 
 - Home sidebar
@@ -86,6 +94,8 @@ themes/rain-glass/
 - Makes `.toc-panel` sticky on desktop and tablet layouts
 - Gives `.toc-body` its own vertical scroll area for long TOCs
 - Resets the TOC to static flow at `max-width: 980px`
+- Styles article Markdown tables with visible outer and cell borders
+- Keeps wide article tables scrollable through `.article-table-scroll`
 
 ### `static/js/theme.js`
 
@@ -105,6 +115,14 @@ themes/rain-glass/
 - Long TOCs are constrained by viewport height, and `.toc-body` scrolls internally.
 - On `max-width: 980px`, `.toc-panel` becomes `position: static`, removes max-height, and `.toc-body` returns to normal overflow.
 - Avoid adding `overflow-y: hidden`, `overflow: hidden`, `transform`, or similar containing behavior to TOC ancestors unless sticky behavior is rechecked.
+
+## Markdown Table Behavior
+
+- `layouts/_markup/render-table.html` overrides Hugo's Markdown table rendering.
+- Tables are wrapped in `.article-table-scroll` so wide tables stay inside the article and scroll horizontally.
+- `.article-body table`, `th`, and `td` define visible table borders, spacing, header background, and alignment.
+- `.article-panel` and `.article-body` use `min-width: 0` so scrollable table wrappers can shrink inside the post layout.
+- On small viewports, `.article-table-scroll` adjusts right spacing to keep the scrollable area aligned with the article padding.
 
 ### `static/vendor/raindrop-fx.js`
 
