@@ -437,6 +437,28 @@ body.rain-ready .rain-canvas {
   color: var(--text-soft);
 }
 
+.article-body table {
+  width: 100%;
+  margin: 24px 0;
+  border-collapse: collapse;
+  border: 1px solid rgba(36, 68, 102, 0.28);
+  background: rgba(250, 252, 255, 0.42);
+}
+
+.article-body th,
+.article-body td {
+  padding: 10px 12px;
+  border: 1px solid rgba(36, 68, 102, 0.24);
+  text-align: left;
+  vertical-align: top;
+}
+
+.article-body th {
+  background: rgba(228, 239, 255, 0.62);
+  color: var(--text-main);
+  font-weight: 700;
+}
+
 .toc-panel {
   position: sticky;
   top: calc(var(--topbar-height) + 32px);
