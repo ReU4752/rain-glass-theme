@@ -11,25 +11,10 @@
       </div>
     </div>
 
-    {{ with site.Taxonomies.categories.ByCount }}
+    {{ with site.Taxonomies.categories.Alphabetical }}
       <section class="sidebar-section">
         <h3>{{ i18n "categories" }}</h3>
-        <div class="tag-cloud">
-          {{ range first 8 . }}
-            <a class="tag-pill" href="{{ .Page.RelPermalink }}">{{ .Page.Title }}</a>
-          {{ end }}
-        </div>
-      </section>
-    {{ end }}
-
-    {{ with site.Taxonomies.tags.ByCount }}
-      <section class="sidebar-section">
-        <h3>{{ i18n "tags" }}</h3>
-        <div class="tag-cloud">
-          {{ range first 10 . }}
-            <a class="tag-pill" href="{{ .Page.RelPermalink }}">{{ .Page.Title }}</a>
-          {{ end }}
-        </div>
+        {{ partial "category-tree.html" (dict "emptyText" (i18n "no_terms")) }}
       </section>
     {{ end }}
   </aside>

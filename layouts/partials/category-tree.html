@@ -1,0 +1,151 @@
+{{- $rootName := "root" -}}
+{{- $maxDepth := 1 -}}
+{{- with site.Params.categories -}}
+  {{- with index . "rootname" -}}
+    {{- $rootName = . -}}
+  {{- end -}}
+  {{- if isset . "maxdepth" -}}
+    {{- $maxDepth = int (index . "maxdepth") -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $terms := site.Taxonomies.categories.Alphabetical -}}
+{{- $scratch := newScratch -}}
+
+{{- range $terms -}}
+  {{- $term := . -}}
+  {{- $rawName := strings.TrimSpace .Name -}}
+  {{- $name := strings.TrimSpace .Page.Title -}}
+  {{- if eq $name "" -}}
+    {{- $name = $rawName -}}
+  {{- end -}}
+  {{- if eq (lower $rawName) (lower $rootName) -}}
+    {{- $name = $rootName -}}
+  {{- end -}}
+  {{- if eq $name "" -}}
+    {{- $name = $rootName -}}
+  {{- end -}}
+  {{- $parts := slice -}}
+  {{- range split $name "/" -}}
+    {{- $part := strings.TrimSpace . -}}
+    {{- if ne $part "" -}}
+      {{- $parts = $parts | append $part -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if eq (len $parts) 0 -}}
+    {{- $parts = $parts | append $rootName -}}
+  {{- end -}}
+  {{- if ne (lower (index $parts 0)) (lower $rootName) -}}
+    {{- $parts = slice $rootName | append $parts -}}
+  {{- end -}}
+  {{- $normalizedName := delimit $parts "/" -}}
+  {{- $scratch.SetInMap "termsByPath" (lower $normalizedName) $term -}}
+{{- end -}}
+
+{{- range site.RegularPages -}}
+  {{- $categories := .Params.categories | default slice -}}
+  {{- if eq (len $categories) 0 -}}
+    {{- $categories = slice $rootName -}}
+  {{- end -}}
+  {{- range $categories -}}
+    {{- $name := strings.TrimSpace . -}}
+    {{- if eq $name "" -}}
+      {{- $name = $rootName -}}
+    {{- end -}}
+    {{- $parts := slice -}}
+    {{- range split $name "/" -}}
+      {{- $part := strings.TrimSpace . -}}
+      {{- if ne $part "" -}}
+        {{- $parts = $parts | append $part -}}
+      {{- end -}}
+    {{- end -}}
+    {{- if eq (len $parts) 0 -}}
+      {{- $parts = $parts | append $rootName -}}
+    {{- end -}}
+    {{- if ne (lower (index $parts 0)) (lower $rootName) -}}
+      {{- $parts = slice $rootName | append $parts -}}
+    {{- end -}}
+    {{- $normalizedName := delimit $parts "/" -}}
+    {{- $scratch.SetInMap "actualByPath" (lower $normalizedName) true -}}
+  {{- end -}}
+{{- end -}}
+
+{{- range $terms -}}
+  {{- $rawName := strings.TrimSpace .Name -}}
+  {{- $name := strings.TrimSpace .Page.Title -}}
+  {{- if eq $name "" -}}
+    {{- $name = $rawName -}}
+  {{- end -}}
+  {{- if eq (lower $rawName) (lower $rootName) -}}
+    {{- $name = $rootName -}}
+  {{- end -}}
+  {{- if eq $name "" -}}
+    {{- $name = $rootName -}}
+  {{- end -}}
+  {{- $parts := slice -}}
+  {{- range split $name "/" -}}
+    {{- $part := strings.TrimSpace . -}}
+    {{- if ne $part "" -}}
+      {{- $parts = $parts | append $part -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if eq (len $parts) 0 -}}
+    {{- $parts = $parts | append $rootName -}}
+  {{- end -}}
+  {{- if ne (lower (index $parts 0)) (lower $rootName) -}}
+    {{- $parts = slice $rootName | append $parts -}}
+  {{- end -}}
+  {{- range $index, $part := $parts -}}
+    {{- if le $index $maxDepth -}}
+      {{- $path := delimit (first (add $index 1) $parts) "/" -}}
+      {{- $key := lower $path -}}
+      {{- $scratch.Add "rows" (slice (dict
+        "key" $key
+        "level" $index
+        "path" $path
+        "sortKey" $key
+        "title" $part
+      )) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $rows := $scratch.Get "rows" | default slice -}}
+{{- $termsByPath := $scratch.Get "termsByPath" | default dict -}}
+{{- $actualByPath := $scratch.Get "actualByPath" | default dict -}}
+{{- $seen := newScratch -}}
+
+{{- if gt (len $rows) 0 -}}
+  <nav class="category-tree" aria-label="{{ i18n "categories" }}">
+    {{- range sort $rows "sortKey" -}}
+      {{- if not ($seen.Get .key) -}}
+        {{- $row := . -}}
+        {{- $seen.Set .key true -}}
+        {{- $term := index $termsByPath .key -}}
+        {{- $isActual := index $actualByPath .key -}}
+        {{- $termPage := false -}}
+        {{- if $isActual -}}
+          {{- with $term -}}
+            {{- $termPage = .Page -}}
+          {{- else -}}
+            {{- with site.GetPage (printf "/categories/%s" .key) -}}
+              {{- $termPage = . -}}
+            {{- end -}}
+          {{- end -}}
+        {{- end -}}
+        <div class="category-tree-row category-tree-level-{{ $row.level }}" style="--category-level: {{ $row.level }};">
+          {{- if gt $row.level 0 -}}
+            <span class="category-tree-marker" aria-hidden="true">ㄴ</span>
+          {{- end -}}
+          {{- with $termPage -}}
+            <a class="category-tree-item category-tree-link" href="{{ .RelPermalink }}">{{ $row.title }}</a>
+          {{- else -}}
+            <span class="category-tree-item category-tree-label">{{ $row.title }}</span>
+          {{- end -}}
+        </div>
+      {{- end -}}
+    {{- end -}}
+  </nav>
+{{- else -}}
+  <div class="empty-state glass-subpanel">{{ .emptyText | default (i18n "no_terms") }}</div>
+{{- end -}}

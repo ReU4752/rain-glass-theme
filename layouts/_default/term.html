@@ -1,4 +1,31 @@
 {{ define "main" }}
+  {{ $pages := .Pages }}
+  {{ $rootName := "root" }}
+  {{ with site.Params.categories }}
+    {{ with index . "rootname" }}
+      {{ $rootName = . }}
+    {{ end }}
+  {{ end }}
+  {{ if and (eq .Data.Singular "category") (eq (lower .Data.Term) (lower $rootName)) }}
+    {{ range where site.RegularPages "Section" "posts" }}
+      {{ $categories := .Params.categories | default slice }}
+      {{ $isRoot := false }}
+      {{ if eq (len $categories) 0 }}
+        {{ $isRoot = true }}
+      {{ else }}
+        {{ range $categories }}
+          {{ $category := strings.TrimSpace . }}
+          {{ if or (eq $category "") (eq (lower $category) (lower $rootName)) }}
+            {{ $isRoot = true }}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+      {{ if $isRoot }}
+        {{ $pages = $pages | append . }}
+      {{ end }}
+    {{ end }}
+    {{ $pages = $pages | uniq }}
+  {{ end }}
   <section class="listing-panel glass-panel">
     <header class="section-header section-header-spaced">
       <div>
@@ -7,7 +34,7 @@
       </div>
     </header>
     <div class="post-list">
-      {{ range .Pages.ByDate.Reverse }}
+      {{ range $pages.ByDate.Reverse }}
         {{ partial "post-card.html" . }}
       {{ else }}
         <div class="empty-state glass-subpanel">{{ i18n "no_posts" }}</div>

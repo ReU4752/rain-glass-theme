@@ -16,7 +16,17 @@ Hugo blog theme.
 - Keep `.site-shell` free of vertical overflow clipping so sticky positioning can work.
 - Markdown tables are wrapped by `layouts/_markup/render-table.html` and scroll horizontally when wider than the article.
 - Article Markdown tables use theme-provided borders and header styling.
+- Category terms render as a tree with `root` as the single top-level item.
+- Posts with missing, empty, or whitespace-only categories are listed under `root`.
 - `theme.js` adds TOC collapse buttons and active-section highlighting.
+
+## Category Options
+
+```toml
+[params.categories]
+  maxDepth = 1
+  rootName = 'root'
+```
 
 ## Apply
 

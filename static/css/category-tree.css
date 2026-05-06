@@ -1,0 +1,49 @@
+.category-tree {
+  display: grid;
+  gap: 8px;
+}
+
+.category-tree-row {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  padding-left: calc(var(--category-level, 0) * 1.2rem);
+}
+
+.category-tree-marker {
+  flex: 0 0 auto;
+  margin-right: 0.34rem;
+  color: rgba(7, 43, 88, 0.64);
+  font-size: 0.82rem;
+  line-height: 1;
+}
+
+.category-tree-item {
+  min-width: 0;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0 12px;
+  overflow-wrap: anywhere;
+  font-size: 0.88rem;
+}
+
+.category-tree-link {
+  border: 1px solid rgba(6, 40, 93, 0.18);
+  background: rgba(245, 253, 255, 0.36);
+  color: rgba(7, 43, 88, 0.9);
+}
+
+.category-tree-link:hover,
+.category-tree-link:focus-visible {
+  color: #021f56;
+  background: rgba(245, 253, 255, 0.5);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(82, 123, 168, 0.26);
+}
+
+.category-tree-label {
+  color: rgba(4, 39, 86, 0.86);
+  font-weight: 700;
+}

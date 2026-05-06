@@ -6,12 +6,16 @@
         <h1>{{ .Title }}</h1>
       </div>
     </header>
-    <div class="tag-cloud">
-      {{ range .Pages }}
-        <a class="tag-pill" href="{{ .RelPermalink }}">{{ .Title }}</a>
-      {{ else }}
-        <div class="empty-state glass-subpanel">{{ i18n "no_terms" }}</div>
-      {{ end }}
-    </div>
+    {{ if eq .Data.Plural "categories" }}
+      {{ partial "category-tree.html" (dict "emptyText" (i18n "no_terms")) }}
+    {{ else }}
+      <div class="tag-cloud">
+        {{ range .Pages }}
+          <a class="tag-pill" href="{{ .RelPermalink }}">{{ .Title }}</a>
+        {{ else }}
+          <div class="empty-state glass-subpanel">{{ i18n "no_terms" }}</div>
+        {{ end }}
+      </div>
+    {{ end }}
   </section>
 {{ end }}
