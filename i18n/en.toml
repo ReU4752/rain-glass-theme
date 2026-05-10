@@ -10,6 +10,18 @@ other = "Tags"
 [contents]
 other = "Contents"
 
+[post_navigation]
+other = "Post navigation"
+
+[previous_post]
+other = "Previous post"
+
+[next_post]
+other = "Next post"
+
+[comments]
+other = "Comments"
+
 [no_posts]
 other = "No posts yet."
 

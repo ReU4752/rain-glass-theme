@@ -428,6 +428,12 @@ body.rain-ready .rain-canvas {
   align-items: start;
 }
 
+.single-main {
+  min-width: 0;
+  display: grid;
+  gap: 24px;
+}
+
 .article-header {
   margin-bottom: 26px;
 }
@@ -543,6 +549,75 @@ body.rain-ready .rain-canvas {
   background: rgba(218, 241, 251, 0.62);
   color: var(--text-main);
   font-weight: 700;
+}
+
+.post-footer {
+  display: grid;
+  gap: 24px;
+}
+
+.post-navigation {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 16px;
+}
+
+.post-navigation-card {
+  min-width: 0;
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(210, 239, 251, 0.14)),
+    rgba(246, 253, 255, 0.22);
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease;
+}
+
+.post-navigation-card:hover,
+.post-navigation-card:focus-visible {
+  transform: translateY(-2px);
+  border-color: rgba(238, 250, 255, 0.56);
+  background-color: rgba(246, 253, 255, 0.34);
+  outline: none;
+}
+
+.post-navigation-card-next {
+  text-align: right;
+}
+
+.post-navigation-label {
+  color: rgba(4, 39, 86, 0.72);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.post-navigation-card strong {
+  color: var(--text-main);
+  overflow-wrap: anywhere;
+}
+
+.post-navigation-meta {
+  color: var(--text-soft);
+  font-size: 0.86rem;
+}
+
+.comments-panel {
+  padding: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(197, 235, 250, 0.12)),
+    rgba(246, 253, 255, 0.2);
+}
+
+.comments-panel h2 {
+  margin: 0 0 18px;
+  font-size: 1.1rem;
+}
+
+#disqus_thread {
+  min-width: 0;
 }
 
 .toc-panel {
@@ -795,8 +870,17 @@ body.rain-ready .rain-canvas {
   .home-sidebar,
   .home-content,
   .listing-panel,
-  .article-panel {
+  .article-panel,
+  .comments-panel {
     padding: 18px;
+  }
+
+  .post-navigation {
+    grid-template-columns: 1fr;
+  }
+
+  .post-navigation-card-next {
+    text-align: left;
   }
 
   .article-table-scroll {

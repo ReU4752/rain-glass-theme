@@ -1,0 +1,21 @@
+{{- $pages := where site.RegularPages "Section" "posts" -}}
+{{- $prev := $pages.Prev . -}}
+{{- $next := $pages.Next . -}}
+{{- if or $prev $next -}}
+  <nav class="post-navigation" aria-label="{{ i18n "post_navigation" }}">
+    {{- with $prev -}}
+      <a class="post-navigation-card post-navigation-card-prev glass-subpanel" href="{{ .RelPermalink }}">
+        <span class="post-navigation-label">{{ i18n "previous_post" }}</span>
+        <strong>{{ .Title }}</strong>
+        <span class="post-navigation-meta">{{ partial "article-meta.html" . }}</span>
+      </a>
+    {{- end -}}
+    {{- with $next -}}
+      <a class="post-navigation-card post-navigation-card-next glass-subpanel" href="{{ .RelPermalink }}">
+        <span class="post-navigation-label">{{ i18n "next_post" }}</span>
+        <strong>{{ .Title }}</strong>
+        <span class="post-navigation-meta">{{ partial "article-meta.html" . }}</span>
+      </a>
+    {{- end -}}
+  </nav>
+{{- end -}}

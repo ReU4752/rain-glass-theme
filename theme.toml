@@ -4,7 +4,7 @@ licenselink = "https://opensource.org/licenses/MIT"
 description = "A rainy glass Hugo theme with a raindrop background."
 homepage = "https://example.org/"
 tags = ["blog", "glassmorphism", "rain", "responsive"]
-features = ["blog", "responsive", "toc"]
+features = ["blog", "responsive", "toc", "post navigation", "comments"]
 min_version = "0.160.0"
 
 [author]

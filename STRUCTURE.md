@@ -5,7 +5,7 @@
 `rain-glass` is a Hugo blog theme.
 
 - Home: profile sidebar and post list
-- Post: article card and sticky right TOC
+- Post: article card, sticky right TOC, previous/next navigation, and Disqus comments
 - Background: `raindrop-fx`
 
 ## Folder Layout
@@ -26,7 +26,10 @@ themes/rain-glass/
       head.html
       header.html
       home-sidebar.html
+      comments.html
       post-card.html
+      post-footer.html
+      post-navigation.html
     index.html
   static/
     css/
@@ -70,7 +73,25 @@ themes/rain-glass/
 
 - Single post layout
 - Renders article content and `.TableOfContents`
+- Wraps the article and post footer in `.single-main`
+- Renders the post footer only for pages in the `posts` section
 - Places the TOC in `.toc-panel` beside the article on wide viewports
+
+### `layouts/partials/post-footer.html`
+
+- Footer container for single posts
+- Includes post navigation and comments
+
+### `layouts/partials/post-navigation.html`
+
+- Builds the `posts` section collection with `where site.RegularPages "Section" "posts"`
+- Uses Hugo `Pages.Prev` and `Pages.Next` to render adjacent post cards
+- Omits missing previous or next cards at the collection edges
+
+### `layouts/partials/comments.html`
+
+- Reads `[services.disqus].shortname`
+- Renders Hugo's embedded `disqus.html` partial only when the shortname is configured
 
 ### `layouts/_markup/render-table.html`
 
@@ -92,8 +113,10 @@ themes/rain-glass/
 - Keeps `.site-shell` from clipping vertical overflow so sticky elements can work
 - Defines `--toc-sticky-offset` for the post TOC sticky position
 - Makes `.toc-panel` sticky on desktop and tablet layouts
+- Styles post footer navigation cards and the comments panel
 - Gives `.toc-body` its own vertical scroll area for long TOCs
 - Resets the TOC to static flow at `max-width: 980px`
+- Stacks post navigation cards at small viewport widths
 - Styles article Markdown tables with visible outer and cell borders
 - Keeps wide article tables scrollable through `.article-table-scroll`
 
@@ -197,6 +220,17 @@ category = 'categories'
 - `image`: static background and FX background source
 - `raindropEnabled`: enables or disables the rain effect
 
+### `services.disqus`
+
+```toml
+[services]
+  [services.disqus]
+    shortname = 'your-disqus-shortname'
+```
+
+- `shortname`: enables Hugo's embedded Disqus comments on single posts in the `posts` section
+- Replace `your-disqus-shortname` with the Disqus site shortname before deploying
+
 ## Content Front Matter
 
 Post front matter used by the theme:
@@ -224,6 +258,10 @@ draft = false
 - `categories`
 - `tags`
 - `contents`
+- `post_navigation`
+- `previous_post`
+- `next_post`
+- `comments`
 - `no_posts`
 - `no_terms`
 

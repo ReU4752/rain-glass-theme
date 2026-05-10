@@ -1,19 +1,24 @@
 {{ define "main" }}
   <div class="single-layout">
-    <article class="article-panel glass-panel">
-      <header class="article-header">
-        <div class="article-heading">
-          <h1>{{ .Title }}</h1>
-          <p class="article-meta-line">{{ partial "article-meta.html" . }}</p>
-          {{ with .Description }}
-            <p class="article-description">{{ . }}</p>
-          {{ end }}
+    <div class="single-main">
+      <article class="article-panel glass-panel">
+        <header class="article-header">
+          <div class="article-heading">
+            <h1>{{ .Title }}</h1>
+            <p class="article-meta-line">{{ partial "article-meta.html" . }}</p>
+            {{ with .Description }}
+              <p class="article-description">{{ . }}</p>
+            {{ end }}
+          </div>
+        </header>
+        <div class="article-body prose">
+          {{ .Content }}
         </div>
-      </header>
-      <div class="article-body prose">
-        {{ .Content }}
-      </div>
-    </article>
+      </article>
+      {{ if eq .Section "posts" }}
+        {{ partial "post-footer.html" . }}
+      {{ end }}
+    </div>
     {{ $toc := .TableOfContents }}
     {{ if and $toc (ne (trim $toc " \n\r\t") "") }}
       <aside class="toc-panel glass-subpanel">

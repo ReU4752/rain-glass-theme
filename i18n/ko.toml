@@ -10,6 +10,18 @@ other = "태그"
 [contents]
 other = "목차"
 
+[post_navigation]
+other = "글 탐색"
+
+[previous_post]
+other = "이전 글"
+
+[next_post]
+other = "다음 글"
+
+[comments]
+other = "댓글"
+
 [no_posts]
 other = "아직 글이 없습니다."
 

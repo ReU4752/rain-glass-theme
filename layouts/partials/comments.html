@@ -1,0 +1,6 @@
+{{- with site.Config.Services.Disqus.Shortname -}}
+  <section class="comments-panel glass-panel" aria-labelledby="comments-title">
+    <h2 id="comments-title">{{ i18n "comments" }}</h2>
+    {{ partial "disqus.html" $ }}
+  </section>
+{{- end -}}
